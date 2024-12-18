@@ -175,58 +175,69 @@ if data is not None:
         st.plotly_chart(fig, use_container_width=container_width)
 
     def display_region_metrics(region, region_data):
-        """
-        Function to display metrics and charts for a specific region.
-        """
-        st.markdown(f"### Region: {region}")
-        
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown("#### MOF POS Services")
-            plot_bar_chart(
-                region_data, "BRANCH", ["POS MOF Total", "POS MOF Issued"],
-                f"MOF POS Services in {region}",
-                {"value": "POS Metrics", "BRANCH": "Branch"},
-                px.colors.qualitative.Set2
-            )
-            st.markdown(f"**MOF POS %**: {region_data['MOF POS %'].mean():.2f}%")
+    """
+    Function to display metrics and charts for a specific region.
+    """
+    st.markdown(f"### Region: {region}")
 
-        with col2:
-            st.markdown("#### Town POS Services")
-            plot_bar_chart(
-                region_data, "BRANCH", ["POS TOWN Total", "POS TOWN  Issued"],
-                f"Town POS Services in {region}",
-                {"value": "POS Metrics", "BRANCH": "Branch"},
-                px.colors.qualitative.Set3
-            )
-            st.markdown(f"**Town POS %**: {region_data['TOWN POS %'].mean():.2f}%")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("#### MOF POS Services")
+        plot_bar_chart(
+            region_data, "BRANCH", ["POS MOF Total", "POS MOF Issued"],
+            f"MOF POS Services in {region}",
+            {"value": "POS Metrics", "BRANCH": "Branch"},
+            px.colors.qualitative.Set2
+        )
+        st.markdown(f"**MOF POS %**: {region_data['MOF POS %'].mean():.2f}%")
 
-        col3, col4 = st.columns(2)
-        with col3:
-            st.markdown("#### MOF Ticket Distribution")
-            plot_pie_chart(
-                region_data, "BRANCH", "MOF POS Tickets",
-                f"MOF POS Tickets Distribution in {region}",
-                px.colors.qualitative.Pastel
-            )
-            plot_pie_chart(
-                region_data, "BRANCH", "MOF Pre Printed  Tickets",
-                f"MOF Preprinted Tickets Distribution in {region}",
-                px.colors.qualitative.Bold
-            )
+    with col2:
+        st.markdown("#### Town POS Services")
+        plot_bar_chart(
+            region_data, "BRANCH", ["POS TOWN Total", "POS TOWN  Issued"],
+            f"Town POS Services in {region}",
+            {"value": "POS Metrics", "BRANCH": "Branch"},
+            px.colors.qualitative.Set3
+        )
+        st.markdown(f"**Town POS %**: {region_data['TOWN POS %'].mean():.2f}%")
 
-        with col4:
-            st.markdown("#### Town Ticket Distribution")
-            plot_pie_chart(
-                region_data, "BRANCH", "TOWN POS Tickets",
-                f"Town POS Tickets Distribution in {region}",
-                px.colors.qualitative.Set2
-            )
-            plot_pie_chart(
-                region_data, "BRANCH", "TOWN Pre Printed  Tickets",
-                f"Town Preprinted Tickets Distribution in {region}",
-                px.colors.qualitative.Set1
-            )
+    col3, col4 = st.columns(2)
+    with col3:
+        st.markdown("#### MOF Ticket Distribution")
+        plot_pie_chart(
+            region_data, "BRANCH", "MOF POS Tickets",
+            f"MOF POS Tickets Distribution in {region}",
+            px.colors.qualitative.Pastel
+        )
+        plot_pie_chart(
+            region_data, "BRANCH", "MOF Pre Printed  Tickets",
+            f"MOF Preprinted Tickets Distribution in {region}",
+            px.colors.qualitative.Bold
+        )
+
+    with col4:
+        st.markdown("#### Town Ticket Distribution")
+        plot_pie_chart(
+            region_data, "BRANCH", "TOWN POS Tickets",
+            f"Town POS Tickets Distribution in {region}",
+            px.colors.qualitative.Set2
+        )
+        plot_pie_chart(
+            region_data, "BRANCH", "TOWN Pre Printed  Tickets",
+            f"Town Preprinted Tickets Distribution in {region}",
+            px.colors.qualitative.Set1
+        )
+
+    # Additional Pie Chart: MOF POS Tickets vs MOF Preprinted Tickets
+    st.markdown("#### MOF POS Tickets vs MOF Preprinted Tickets")
+    mof_ticket_vs_preprint = region_data[["BRANCH", "MOF POS Tickets", "MOF Pre Printed  Tickets"]]
+    mof_ticket_vs_preprint = mof_ticket_vs_preprint.melt(id_vars="BRANCH", var_name="Type", value_name="Count")
+    pie_fig_mof = px.pie(
+        mof_ticket_vs_preprint, names="Type", values="Count",
+        title=f"MOF POS Tickets vs Preprinted Tickets in {region}",
+        color_discrete_sequence=px.colors.qualitative.Bold
+    )
+    st.plotly_chart(pie_fig_mof, use_container_width=True)
         
     # Create the tabs
     tab3, tab1, tab2 = st.tabs([
