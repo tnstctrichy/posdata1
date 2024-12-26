@@ -230,9 +230,9 @@ if data is not None:
         
     # Create the tabs
     tab3, tab1, tab2 = st.tabs([
-        "📊 Kumbakonam Corporation View",
-        "🔎 Kumbakonam - Regionwise View",
-        "📥 Download - Excel Sheet Data"
+        "📊 Kumbakonam - Corporation",
+        "🔎 Kumbakonam - Regionwise",
+        "📥 Download - Excel Data"
     ])
 
     # Global filtered_data for consistent use
